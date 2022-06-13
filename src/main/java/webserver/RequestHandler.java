@@ -41,7 +41,7 @@ public class RequestHandler extends Thread {
         	String line = br.readLine();
         	if(line == null) return;
         	ControllerHandling ch = new ControllerHandling();
-        	PostHandling ph = new PostHandling();
+        	PostHandling ph = new PostHandling(); 
         	
         	
         	byte[] body = "".getBytes();
