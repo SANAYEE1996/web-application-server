@@ -4,24 +4,31 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
+
 public class ControllerHandling {
 	public byte[] getRequest(String line) {
 		String[] tokens = line.split(" ");
-		System.out.println("type :\t"+tokens[0]);
-		System.out.println("request :\t"+tokens[1]);
-		if(tokens[1].equals("/")) {
-			return goToIndex();
+		
+		System.out.println("from : "+line);
+		if(tokens.length > 1) {
+			return goToHtml(getPath(tokens[1]));
 		}
-		return "준비 중".getBytes();
+		return "무엇인가 잘못 되었습니다.".getBytes();
 	}
 	
-	public byte[] goToIndex() {
+	public String getPath(String tokens) {
+		if(tokens.equals("/")) return "/index.html";
+		return tokens;
+	}
+	
+	public byte[] goToHtml(String url) {
 		byte[] body = null;
 		try {
-			body = Files.readAllBytes(new File("./webapp/index.html").toPath());
+			body = Files.readAllBytes(new File("./webapp" + url).toPath());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return body;
 	}
+	
 }
