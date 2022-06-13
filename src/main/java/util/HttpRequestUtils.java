@@ -28,7 +28,7 @@ public class HttpRequestUtils {
 
     private static Map<String, String> parseValues(String values, String separator) {
         if (Strings.isNullOrEmpty(values)) {
-            return Maps.newHashMap();
+            return Maps.newHashMap(); 
         }
 
         String[] tokens = values.split(separator);
