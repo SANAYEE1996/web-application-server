@@ -1,5 +1,6 @@
 package util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -13,6 +14,14 @@ public class HttpRequestUtils {
      *            URL에서 ? 이후에 전달되는 field1=value1&field2=value2 형식임
      * @return
      */
+	public static ArrayList<String> getParam(String readData){
+		ArrayList<String> getParamList = new ArrayList<>();
+		String[] strArray = readData.split("&");
+		for(String s : strArray) getParamList.add(s.substring(s.indexOf("=")+1));
+		return getParamList;
+	}
+	
+	
     public static Map<String, String> parseQueryString(String queryString) {
         return parseValues(queryString, "&");
     }
