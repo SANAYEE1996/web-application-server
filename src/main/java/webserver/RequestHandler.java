@@ -47,6 +47,7 @@ public class RequestHandler extends Thread {
         	 */
         	body = handling.getRequest(firstLine, map, br);
         	DataOutputStream dos = new DataOutputStream(out);
+        	log.debug("!!! request url : {}" , firstLine[1]);
         	if(firstLine[1].equals("/user/create")) {
         		response302Header(dos);
         		responseBody(dos, body); 
@@ -60,6 +61,11 @@ public class RequestHandler extends Thread {
         			response200Header_LoginFail(dos, body.length);
         			responseBody(dos, body); 
         		}
+        	}
+        	else if(firstLine[1].equals("/css/styles.css") || 
+        			firstLine[1].equals("/css/bootstrap.min.css")) {
+        		response200Header_Css(dos, body.length);
+        		responseBody(dos, body); 
         	}
         	else {
         		response200Header(dos, body.length);
@@ -75,6 +81,17 @@ public class RequestHandler extends Thread {
     	try {
             dos.writeBytes("HTTP/1.1 302 Found \r\n");
             dos.writeBytes("Location: " + location);
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+    }
+    
+    private void response200Header_Css(DataOutputStream dos, int lengthOfBodyContent) {
+    	try {
+    		dos.writeBytes("HTTP/1.1 200 OK \r\n");
+            dos.writeBytes("Content-Type: text/css;charset=utf-8\r\n");
+            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             log.error(e.getMessage());
