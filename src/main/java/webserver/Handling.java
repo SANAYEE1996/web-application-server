@@ -5,8 +5,14 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.sun.tools.sjavac.Log;
 
 import db.DataBase;
 import model.User;
@@ -16,6 +22,8 @@ import util.IOUtils;
 
 public class Handling {
 	static String nowUrl;
+	
+	private static final Logger logger = LoggerFactory.getLogger(Handling.class);
 	
 	
 	public byte[] getRequest(String[] firstLine, HashMap<String, String> map, BufferedReader br) throws IOException {
@@ -53,15 +61,28 @@ public class Handling {
 	
 	public byte[] showUserList() {
 		StringBuilder sb = new StringBuilder();
-		User users = (User) DataBase.findAll();
+		Collection<User> users = DataBase.findAll();
 		
-		return "사용자가 왜 아무도 없지..".getBytes();
+		sb.append("<body>");
+		sb.append("<h1> 현재 접속중인 접속자들 </h1>");
+		for(User user : users) {
+			sb.append("<div>");
+			sb.append("user's id : " +user.getUserId());
+			sb.append(" , user's name : " +user.getName());
+			sb.append(" , user's email : " +user.getEmail());
+			sb.append("</div>");
+		}
+		sb.append("</body>");
+		
+		
+		return sb.toString().getBytes();
 	}
 	
 	public byte[] showUserList(HashMap<String, String> map) {
 		String cookies = map.get("Cookie");
+		logger.debug("Cookie -> {}",map.get("Cookie"));
 		Map<String, String> cookieMap= HttpRequestUtils.parseCookies(cookies);
-		if(cookieMap.get("logined").contains("true"))	return "사용자 목록".getBytes();
+		if(cookieMap.get("logined").contains("true"))	return showUserList();
 		return goToHtml("/user/login.html");
 	}
 	
