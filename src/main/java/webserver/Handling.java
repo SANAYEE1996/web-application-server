@@ -12,8 +12,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sun.tools.sjavac.Log;
-
 import db.DataBase;
 import model.User;
 import util.HttpRequestUtils;
