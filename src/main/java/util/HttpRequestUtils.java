@@ -16,7 +16,7 @@ public class HttpRequestUtils {
      */
 	public static ArrayList<String> getParam(String readData){
 		ArrayList<String> getParamList = new ArrayList<>();
-		String[] strArray = readData.split("&");
+		String[] strArray = readData.split("&"); 
 		for(String s : strArray) getParamList.add(s.substring(s.indexOf("=")+1));
 		return getParamList;
 	}
