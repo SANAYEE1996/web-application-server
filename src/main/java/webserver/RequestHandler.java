@@ -33,7 +33,6 @@ public class RequestHandler extends Thread {
         	BufferedReader br = new BufferedReader(reader);
         	Handling handling = new Handling();
         	
-        	
         	String line = br.readLine();
         	if(line == null) return;
         	byte[] body = "".getBytes();
