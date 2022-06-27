@@ -38,6 +38,7 @@ public class RequestHandler extends Thread {
         	if(line == null) return;
         	byte[] body = "".getBytes();
         	String[] firstLine = line.split(" ");
+        	String url = firstLine[1];
         	HashMap<String, String> map = new HashMap<>();
         	ReadLine.saveHttpToMap(map, br);
         	/* 
@@ -48,11 +49,11 @@ public class RequestHandler extends Thread {
         	body = handling.getRequest(firstLine, map, br);
         	DataOutputStream dos = new DataOutputStream(out);
         	log.debug("!!! request url : {}" , firstLine[1]);
-        	if(firstLine[1].equals("/user/create")) {
+        	if(url.equals("/user/create")) {
         		response302Header(dos);
         		responseBody(dos, body); 
         	}
-        	else if(firstLine[1].equals("/user/login")) {
+        	else if(url.equals("/user/login")) {
         		if(Handling.nowUrl.equals("/index.html")) {
         			response200Header_LoginSuccess(dos, body.length);
         			responseBody(dos, body); 
@@ -62,8 +63,8 @@ public class RequestHandler extends Thread {
         			responseBody(dos, body); 
         		}
         	}
-        	else if(firstLine[1].equals("/css/styles.css") || 
-        			firstLine[1].equals("/css/bootstrap.min.css")) {
+        	else if(url.equals("/css/styles.css") || 
+        			url.equals("/css/bootstrap.min.css")) {
         		response200Header_Css(dos, body.length);
         		responseBody(dos, body); 
         	}
