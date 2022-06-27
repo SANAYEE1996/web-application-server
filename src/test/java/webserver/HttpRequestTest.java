@@ -6,7 +6,6 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.net.http.HttpRequest;
 
 import org.junit.Test;
 
@@ -17,10 +16,24 @@ public class HttpRequestTest {
 	@Test
 	public void request_Get() throws Exception {
 		InputStream in = new FileInputStream(new File(testDirectory + "Http_GET.txt"));
-//		HttpRequest request = new HttpRequest(in);
+		webserver.HttpRequest request = new webserver.HttpRequest(in);
 		
-//		assertEquals("GET", request.getMethod());
+		assertEquals("GET", request.getMethod());
+		assertEquals("/user/create", request.getPath());
+		assertEquals("keep-alive", request.getHeader("Connection"));
+		assertEquals("qwer", request.getParameter("id"));
 		
+	}
+	
+	@Test
+	public void request_Post() throws Exception {
+		InputStream in = new FileInputStream(new File(testDirectory + "Http_POST.txt"));
+		webserver.HttpRequest request = new webserver.HttpRequest(in);
+		
+		assertEquals("POST", request.getMethod());
+		assertEquals("/user/create", request.getPath());
+		assertEquals("keep-alive", request.getHeader("Connection"));
+		assertEquals("qwer", request.getParameter("id"));
 		
 	}
 
