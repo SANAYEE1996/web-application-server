@@ -9,27 +9,27 @@ import java.util.HashMap;
 import util.IOUtils;
 
 public class HttpRequest {
-	InputStream in = null;
-	InputStreamReader reader = null;
-	BufferedReader br = null;
+	InputStream in;
+	InputStreamReader reader;
+	BufferedReader br;
 	String[] requestArray;
 	String queryString;
 	String url;
 	String path;
-	int queryIndex = 0;
-	HashMap<String, String> httpHeaderMap = new HashMap<>();
-	HashMap<String, String> getParameterMap = new HashMap<>();
-	HashMap<String, String> postParameterMap = new HashMap<>();
+	int queryIndex;
+	HashMap<String, String> httpHeaderMap;
+	HashMap<String, String> getParameterMap;
+	HashMap<String, String> postParameterMap;
 	
 	public HttpRequest(InputStream http) throws IOException {
 		this.in = http;
-		reader = new InputStreamReader(in);
-		br = new BufferedReader(reader);
-		requestArray = br.readLine().split(" ");
-		url = requestArray[1];
-		queryIndex = url.indexOf("?");
-		path = (queryIndex >= 0) ? url.substring(0,queryIndex) : url;
-		queryString = (queryIndex >= 0) ? url.substring(queryIndex+1) : "";
+		this.reader = new InputStreamReader(in);
+		this.br = new BufferedReader(reader);
+		this.requestArray = br.readLine().split(" ");
+		this.url = requestArray[1];
+		this.queryIndex = url.indexOf("?");
+		this.path = (queryIndex >= 0) ? url.substring(0,queryIndex) : url;
+		this.queryString = (queryIndex >= 0) ? url.substring(queryIndex+1) : "";
 		saveHttpToMap();
 		if (getMethod().equals("GET")) {
 			saveGetParameterToMap();
@@ -43,6 +43,7 @@ public class HttpRequest {
 		int contentLength = Integer.parseInt(httpHeaderMap.get("Content-Length"));
 		String[] readData = IOUtils.readData(br, contentLength).split("&");
 		int andIndex = 0;
+		this.postParameterMap = new HashMap<>();
 		for(String s : readData) {
 			andIndex = s.indexOf("=");
 			postParameterMap.put(s.substring(0, andIndex),s.substring(andIndex+1));
@@ -52,6 +53,7 @@ public class HttpRequest {
 	public void saveGetParameterToMap() throws IOException {
 		String[] str = queryString.split("&");
 		int andIndex = 0;
+		this.getParameterMap = new HashMap<>();
 		for(String s : str) {
 			andIndex = s.indexOf("=");
 			getParameterMap.put(s.substring(0, andIndex),s.substring(andIndex+1));
@@ -61,6 +63,7 @@ public class HttpRequest {
 	public void saveHttpToMap() throws IOException {
 		String line = br.readLine();
 		int index = 0;
+		this.httpHeaderMap = new HashMap<>();
 		while(!"".equals(line) && line != null) {
 			System.out.println(line);
 			index = line.indexOf(":");
