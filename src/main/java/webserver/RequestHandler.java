@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import org.slf4j.Logger;
@@ -28,7 +29,7 @@ public class RequestHandler extends Thread {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
-        	
+        	System.out.println(out.toString());
         	InputStreamReader reader = new InputStreamReader(in);
         	BufferedReader br = new BufferedReader(reader);
         	Handling handling = new Handling();
