@@ -47,7 +47,13 @@ public class RequestHandler extends Thread {
         		log.debug("key->{}//content->{}",key,map.get(key));
         	 */
         	body = handling.getRequest(firstLine, map, br);
+        	
+        	
+        	
         	DataOutputStream dos = new DataOutputStream(out);
+        	
+        	
+        	
         	log.debug("!!! request url : {}" , firstLine[1]);
         	if(url.equals("/user/create")) {
         		response302Header(dos);
@@ -63,8 +69,7 @@ public class RequestHandler extends Thread {
         			responseBody(dos, body); 
         		}
         	}
-        	else if(url.equals("/css/styles.css") || 
-        			url.equals("/css/bootstrap.min.css")) {
+        	else if(url.contains("css")) {
         		response200Header_Css(dos, body.length);
         		responseBody(dos, body); 
         	}
