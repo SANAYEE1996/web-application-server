@@ -29,21 +29,23 @@ public class RequestHandler extends Thread {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             HttpRequest request = new HttpRequest(in);
             HttpResponse response = new HttpResponse(out);
-            log.debug("요청 온 url : {}",request.getPath());
-            if(request.getPath().equals("/user/create")) {
+            String url = request.getPath();
+            log.debug("요청 온 url : {}",url);
+            if(url.equals("/user/create")) {
             	CreateUserController c = new CreateUserController();
             	c.service(request, response);
             }
-            else if(request.getPath().equals("/user/list")) {
+            else if(url.equals("/user/list")) {
             	ListUserController c = new ListUserController();
             	c.service(request, response);
             }
-            else if(request.getPath().equals("/user/login")) {
+            else if(url.equals("/user/login")) {
             	LoginController c = new LoginController();
             	c.service(request, response);
             }
-            else if(request.getPath().contains("css")) {
-            	response.cssForward(request.getPath());
+            else if(url.equals("/css/styles.css") || url.equals("/css/bootstrap.min.css")) {
+            	log.debug("!!!!!요청 온 css url : {}",url);
+            	response.cssForward(url);
             }
             else {
             	response.forward(request.getPath());
