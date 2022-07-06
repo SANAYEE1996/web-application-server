@@ -55,12 +55,11 @@ public class HttpResponse {
 		responseBody();
 	}
 	
+	//css forward response
 	public void cssForward(String url) {
 		getHtml(url);
 		response200Header();
-		addHeader("Content-Type", "text/css;charset=utf-8");
-		addHeader("Content-Length", String.valueOf(body.length));
-		processHeaders();
+		responseCssHeader();
 		responseBody();
 	}
 	
@@ -90,7 +89,16 @@ public class HttpResponse {
 		
 	}
 	
-	
+	private void responseCssHeader() {
+		try {
+			dos.writeBytes("Content-Type: text/css;charset=utf-8\r\n");
+            dos.writeBytes("Content-Length: " + body.length + "\r\n");
+            dos.writeBytes("\r\n");
+		}
+		catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	private void response200Header() {
 		try {
@@ -117,7 +125,6 @@ public class HttpResponse {
 	
 	private void responseBody() {
         try {
-        	
             dos.write(body, 0, body.length);
             dos.flush();
         } catch (IOException e) {
