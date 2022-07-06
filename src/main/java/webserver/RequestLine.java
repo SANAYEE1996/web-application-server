@@ -2,7 +2,11 @@ package webserver;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import util.HttpMethod;
 import util.HttpRequestUtils;
@@ -10,16 +14,19 @@ import util.IOUtils;
 
 public class RequestLine {
 	
+	private static final Logger log = LoggerFactory.getLogger(RequestLine.class);
+	
 	private HttpMethod method;
 	private BufferedReader reader = null;
-	private String[] first;
+	private String[] first = null;
 	private HashMap<String, String> httpHeaderMap = new HashMap<>();
 	private HashMap<String, String> parameterMap = new HashMap<>();
 	
-	public RequestLine(BufferedReader reader) {
+	public RequestLine(BufferedReader read) {
 		try {
-			this.reader = reader;
-			this.first = reader.readLine().split(" ");
+			reader = read;
+			first = reader.readLine().split(" ");
+			log.debug("진짜 리얼로 온 url : {}",Arrays.toString(first));
 			method = HttpMethod.valueOf(getMethod());
 			readHeader();
 			saveParam();
