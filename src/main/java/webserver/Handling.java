@@ -53,7 +53,6 @@ public class Handling {
 	public byte[] postUrlMappint(String url, ArrayList<String> getParamList, HashMap<String, String> map) {
 		if(url.equals("/user/create")) return saveUser(getParamList);
 		else if(url.equals("/user/login")) return loginUser(getParamList);
-		else if(url.equals("/user/list")) return showUserList(getParamList,map);
 		return "아직 준비중인 url request".getBytes();
 	}
 	
@@ -79,13 +78,6 @@ public class Handling {
 	public byte[] showUserList(HashMap<String, String> map) {
 		String cookies = map.get("Cookie");
 		logger.debug("Cookie -> {}",map.get("Cookie"));
-		Map<String, String> cookieMap= HttpRequestUtils.parseCookies(cookies);
-		if(cookieMap.get("logined").contains("true"))	return showUserList();
-		return goToHtml("/user/login.html");
-	}
-	
-	public byte[] showUserList(ArrayList<String> getParamList, HashMap<String, String> map) {
-		String cookies = map.get("Cookie");
 		Map<String, String> cookieMap= HttpRequestUtils.parseCookies(cookies);
 		if(cookieMap.get("logined").contains("true"))	return showUserList();
 		return goToHtml("/user/login.html");
