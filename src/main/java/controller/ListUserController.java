@@ -27,12 +27,12 @@ public class ListUserController extends AbstractController{
 		
 	}
 
-	
+	@Override
 	public void doGet(HttpRequest request, HttpResponse response) {
 		String cookies = request.getHeader("Cookie");
 		Map<String, String> cookieMap= HttpRequestUtils.parseCookies(cookies);
 		log.debug("로그인 ? : {}", cookieMap.get("logined"));
-		if(cookieMap.get("logined").contains("true")){
+		if(cookieMap.get("logined").equals("true")){
 			log.debug("로그인 되어 있음");
 			StringBuilder sb = new StringBuilder();
 			Collection<User> users = DataBase.findAll();

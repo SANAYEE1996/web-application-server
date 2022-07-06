@@ -2,7 +2,6 @@ package webserver;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 
 import org.slf4j.Logger;
@@ -19,6 +18,7 @@ public class RequestLine {
 	private HttpMethod method;
 	private BufferedReader reader = null;
 	private String[] first = null;
+	private String requestUrl = null;
 	private HashMap<String, String> httpHeaderMap = new HashMap<>();
 	private HashMap<String, String> parameterMap = new HashMap<>();
 	
@@ -26,13 +26,13 @@ public class RequestLine {
 		try {
 			reader = read;
 			first = reader.readLine().split(" ");
-			log.debug("진짜 리얼로 온 url : {}",Arrays.toString(first));
-			method = HttpMethod.valueOf(getMethod());
+			method = HttpMethod.valueOf(first[0]);
+			requestUrl = first[1];
 			readHeader();
 			saveParam();
 			
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e.getMessage());
 		}
 	}
 	
@@ -41,21 +41,28 @@ public class RequestLine {
 			readBody();
 		}
 		else if(method.isGet()) {
-			readGet(first[1]);
+			readGet(requestUrl);
 		}
 	}
 	
-	private void readHeader() {
+	private void saveHeaderToMap(int index, String line) {
 		try {
-			String line = reader.readLine();
-			int index = 0;
 			while(!"".equals(line) && line != null) {
 				index = line.indexOf(":");
 				if(index >= 0) httpHeaderMap.put(line.substring(0, index).trim(), line.substring(index+1).trim());
 				line = reader.readLine();
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e.getMessage());
+		}
+	}
+	
+	private void readHeader() {
+		try {
+			String line = reader.readLine();
+			saveHeaderToMap(0, line);
+		} catch (IOException e) {
+			log.error(e.getMessage());
 		}
 	}
 	
@@ -65,29 +72,32 @@ public class RequestLine {
 		else parameterMap = (HashMap<String, String>) HttpRequestUtils.parseQueryString(url.substring(index+1));
 	}
 	
+	private void saveBodyToMap(int andIndex, String[] readData) {
+		for(String s : readData) {
+			andIndex = s.indexOf("=");
+			parameterMap.put(s.substring(0, andIndex),s.substring(andIndex+1));
+		}
+	}
+	
 	private void readBody() {
 		int contentLength = Integer.parseInt(httpHeaderMap.get("Content-Length"));
 		String[] readData;
 		try {
 			readData = IOUtils.readData(reader, contentLength).split("&");
-			int andIndex = 0;
-			for(String s : readData) {
-				andIndex = s.indexOf("=");
-				parameterMap.put(s.substring(0, andIndex),s.substring(andIndex+1));
-			}
+			saveBodyToMap(0, readData);
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e.getMessage());
 		}
 	}
 	
-	public String getMethod() {
-		return first[0];
+	public HttpMethod getMethod() {
+		return method;
 	}
 	
 	public String getPath() {
-		int index = first[1].indexOf("?");
-		if(index < 0) return first[1];
-		return first[1].substring(0, index);
+		int indexOfParameterSplit = requestUrl.indexOf("?");
+		if(indexOfParameterSplit < 0) return requestUrl;
+		return requestUrl.substring(0, indexOfParameterSplit);
 	}
 	
 	public HashMap<String, String> getHttpHeaderMap(){

@@ -8,9 +8,8 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import controller.CreateUserController;
-import controller.ListUserController;
-import controller.LoginController;
+import util.controller.Controller;
+import util.mapping.RequestMapping;
 
 public class RequestHandler extends Thread {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
@@ -29,27 +28,17 @@ public class RequestHandler extends Thread {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             HttpRequest request = new HttpRequest(in);
             HttpResponse response = new HttpResponse(out);
-            String url = request.getPath();
-            log.debug("요청 온 url : {}",url);
-            if(url.equals("/user/create")) {
-            	CreateUserController c = new CreateUserController();
-            	c.service(request, response);
-            }
-            else if(url.equals("/user/list")) {
-            	ListUserController c = new ListUserController();
-            	c.service(request, response);
-            }
-            else if(url.equals("/user/login")) {
-            	LoginController c = new LoginController();
-            	c.service(request, response);
-            }
-            else if(url.equals("/css/styles.css") || url.equals("/css/bootstrap.min.css")) {
-            	log.debug("!!!!!요청 온 css url : {}",url);
-            	response.cssForward(url);
+            
+            String requestUrl = request.getPath();
+            Controller controller = RequestMapping.getController(requestUrl);
+            log.debug("요청 온 url : {}",requestUrl);
+            if(controller == null) {
+            	response.forward(requestUrl);
             }
             else {
-            	response.forward(request.getPath());
+            	controller.service(request, response);
             }
+            
         } catch (IOException e) {
             log.error(e.getMessage());
         }

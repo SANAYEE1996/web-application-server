@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
+import util.HttpMethod;
+
 public class HttpRequest {
 	
 	private HashMap<String, String> headerMap = new HashMap<>();
@@ -19,7 +21,7 @@ public class HttpRequest {
 		parameterMap = line.getParameterMap();
 	}
 	
-	public String getMethod() {
+	public HttpMethod getMethod() {
 		return line.getMethod();
 	}
 	

@@ -55,13 +55,13 @@ public class HttpResponseTest {
 	@Test
 	public void cssTest() throws FileNotFoundException {
 		HttpResponse response = new HttpResponse(createOutputStream("Http_Css.txt"));
-		response.cssForward("/css/styles.css");
+		response.forward("/css/styles.css");
 	}
 	
 	@Test
 	public void bootStrapTest() throws FileNotFoundException {
 		HttpResponse response = new HttpResponse(createOutputStream("Http_BootStrap.txt"));
-		response.cssForward("/css/bootstrap.min.css");
+		response.forward("/css/bootstrap.min.css");
 	}
 	
 	

@@ -12,10 +12,10 @@ public class CreateUserController extends AbstractController{
 	@Override
 	public void service(HttpRequest request, HttpResponse response) {
 		
-		if(request.getMethod().equals("POST")) {
+		if(request.getMethod().isPost()) {
 			doPost(request, response);
 		}
-		else if(request.getMethod().equals("GET")) {
+		else if(request.getMethod().isGet()) {
 			doGet(request, response);
 		}
 	}
@@ -30,7 +30,12 @@ public class CreateUserController extends AbstractController{
 	}
 	
 	public void doGet(HttpRequest request, HttpResponse response) {
-		
+		User user = new User( request.getParameter("userId"),
+				  request.getParameter("password"),
+				  request.getParameter("name"),
+				  request.getParameter("email"));
+		DataBase.addUser(user);
+		response.sendRedirect("/index.html");
 	}
 	
 }
