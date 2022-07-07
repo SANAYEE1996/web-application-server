@@ -1,5 +1,5 @@
 HTTP/1.1 200 OK 
-Content-Type: text/css;charset=utf-8
+Content-Type: text/css
 Content-Length: 7268
 
 /*
@@ -204,4 +204,5 @@ h3,h4,h5 {
     padding-top: 1.4em;
     padding-right: 2.5em;
 }
+
 

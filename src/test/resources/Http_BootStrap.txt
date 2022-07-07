@@ -1,5 +1,5 @@
 HTTP/1.1 200 OK 
-Content-Type: text/css;charset=utf-8
+Content-Type: text/css
 Content-Length: 109522
 
 /*!
