@@ -1,8 +1,10 @@
 package controller;
 
 import db.DataBase;
+import httpSession.HttpSession;
 import model.User;
 import util.controller.AbstractController;
+import util.session.JavaSessionUtils;
 import webserver.HttpRequest;
 import webserver.HttpResponse;
 
@@ -17,9 +19,11 @@ public class LoginController extends AbstractController{
 		String requestId = request.getParameter("userId");
 		String requestPw = request.getParameter("password");
 		User user = DataBase.findUserById(requestId);
-		if(user != null && 
-		(user.getUserId().equals(requestId)	&& user.getPassword().equals(requestPw))) {
+		if(user != null && user.logined(requestPw)) {
+			HttpSession session = request.getSession();
+			session.setAttribute(JavaSessionUtils.JSESSIONID, user);
 			response.addHeader("Set-Cookie", "logined=true");
+			response.addHeader("Set-Cookie", "JSESSIONID="+session.getId());
 			response.sendRedirect("/index.html");
 		}
 		else {

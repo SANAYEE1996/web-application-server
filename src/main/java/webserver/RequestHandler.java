@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,9 @@ public class RequestHandler extends Thread {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             HttpRequest request = new HttpRequest(in);
             HttpResponse response = new HttpResponse(out);
+            if(request.getCookies().getCookie("JESSIONID") == null) {
+            	response.addHeader("Set-Cookie", "JESSIONID="+UUID.randomUUID());
+            }
             
             String requestUrl = request.getPath();
             Controller controller = RequestMapping.getController(requestUrl);

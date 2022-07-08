@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
+import httpSession.HttpSession;
+import httpSession.HttpSessions;
 import util.HttpMethod;
 
 public class HttpRequest {
@@ -37,5 +39,12 @@ public class HttpRequest {
 		return parameterMap.get(key);
 	}
 	
+	public HttpCookie getCookies() {
+		return new HttpCookie(getHeader("Cookie"));
+	}
+	
+	public HttpSession getSession() {
+		return HttpSessions.getSession(getCookies().getCookie("JSESSIONID"));
+	}
 	
 }

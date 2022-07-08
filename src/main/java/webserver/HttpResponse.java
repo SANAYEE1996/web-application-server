@@ -25,7 +25,10 @@ public class HttpResponse {
     }
 
     public void addHeader(String key, String value) {
-        headers.put(key, value);
+    	if(headers.containsKey(key)) 
+    		headers.put(key, headers.get(key)+"; " + value);
+    	else	
+    		headers.put(key, value);
     }
 
     public void forward(String url) {

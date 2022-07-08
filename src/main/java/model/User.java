@@ -1,5 +1,6 @@
 package model;
 
+
 public class User {
     private String userId;
     private String password;
@@ -27,6 +28,17 @@ public class User {
 
     public String getEmail() {
         return email;
+    }
+    
+    public boolean isSameUser(User user) {
+        return userId.equals(user.userId);
+    }
+    
+    public boolean logined(String password) {
+    	if(this.password.equals(password)) {
+    		return true;
+    	}
+    	return false;
     }
 
     @Override

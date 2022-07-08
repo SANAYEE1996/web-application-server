@@ -1,14 +1,13 @@
 package controller;
 
 import java.util.Collection;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import db.DataBase;
 import model.User;
-import util.HttpRequestUtils;
+import util.IsLogined;
 import util.controller.AbstractController;
 import webserver.HttpRequest;
 import webserver.HttpResponse;
@@ -29,10 +28,7 @@ public class ListUserController extends AbstractController{
 
 	@Override
 	public void doGet(HttpRequest request, HttpResponse response) {
-		String cookies = request.getHeader("Cookie");
-		Map<String, String> cookieMap= HttpRequestUtils.parseCookies(cookies);
-		log.debug("로그인 ? : {}", cookieMap.get("logined"));
-		if(cookieMap.containsKey("logined") && cookieMap.get("logined").equals("true")){
+		if(IsLogined.islogined(request.getSession())){
 			log.debug("로그인 되어 있음");
 			StringBuilder sb = new StringBuilder();
 			Collection<User> users = DataBase.findAll();
